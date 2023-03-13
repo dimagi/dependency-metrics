@@ -14,7 +14,9 @@ maintainers = [
     {name = "Dimagi", email = "dev@dimagi.com"}
 ]
 license = {file = "LICENSE"}
-dependencies = []
+dependencies = [
+    'requests',
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -25,7 +27,10 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-test = []
+test = [
+    'freezegun',
+    'nose2',
+]
 
 [project.urls]
 repository = "https://github.com/dimagi/package-metrics"
