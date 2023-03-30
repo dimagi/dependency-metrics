@@ -1,1 +1,8 @@
-.idea/
+# cached python files
+*.pyc
+
+# pycharm ide
+/.idea
+
+# pyenv
+/.python-version
