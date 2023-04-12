@@ -6,3 +6,8 @@
 
 # pyenv
 /.python-version
+
+# packaging
+/build/
+/dist/
+*.egg-info/
