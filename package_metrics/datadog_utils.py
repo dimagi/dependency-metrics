@@ -31,7 +31,7 @@ def send_metric(name, value, metric_type, tags=None):
             f"Expected {metric_type} to be one of the following: "
             f"{MetricType.options()}")
 
-    if GITHUB_ACTIONS in os.environ and os.environ[GITHUB_ACTIONS]:
+    if os.environ.get(GITHUB_ACTIONS):
         host = 'github.com'
         ci_env = 'github_actions'
     else:
@@ -49,7 +49,7 @@ def send_metric(name, value, metric_type, tags=None):
 
     tags = tags or {}
     tags['environment'] = ci_env
-    if NOSE_DIVIDED_WE_RUN in os.environ and os.environ[NOSE_DIVIDED_WE_RUN]:
+    if os.environ.get(NOSE_DIVIDED_WE_RUN):
         tags['partition'] = os.environ[NOSE_DIVIDED_WE_RUN]
 
     payload = {
