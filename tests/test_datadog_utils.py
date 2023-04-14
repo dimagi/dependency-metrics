@@ -41,8 +41,7 @@ class SendMetricTests(TestCase):
         self.assertEqual(payload['series'][0]['metric'], 'name')
         self.assertEqual(payload['series'][0]['points'], [[1577874030, 'value']])
         self.assertEqual(payload['series'][0]['host'], 'unknown')
-        self.assertEqual(payload['series'][0]['tags'][0]['environment'],
-                         'unknown')
+        self.assertTrue('environment:unknown' in payload['series'][0]['tags'])
 
     def test_host_and_environment_is_github_when_in_github_action(self, mock_post):
         """
@@ -57,8 +56,8 @@ class SendMetricTests(TestCase):
         args, kwargs = mock_post.call_args
         payload = json.loads(kwargs['json'])
         self.assertEqual(payload['series'][0]['host'], 'github.com')
-        self.assertEqual(payload['series'][0]['tags'][0]['environment'],
-                         'github_actions')
+        self.assertTrue(
+            'environment:github_actions' in payload['series'][0]['tags'])
 
     def test_metric_type_is_gauge_when_set(self, mock_post):
         self._setup_env(DATADOG_API_KEY='api_key', DATADOG_APP_KEY='app_key')
@@ -95,7 +94,7 @@ class SendMetricTests(TestCase):
 
         args, kwargs = mock_post.call_args
         payload = json.loads(kwargs['json'])
-        self.assertEqual(payload['series'][0]['tags'][0]['partition'], '1')
+        self.assertTrue('partition:1' in payload['series'][0]['tags'])
 
     def _setup_env(self, **kwargs):
         """

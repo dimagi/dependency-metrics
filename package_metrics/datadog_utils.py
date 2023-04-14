@@ -58,7 +58,7 @@ def send_metric(name, value, metric_type, tags=None):
             'points': [[current_time, value]],
             'type': metric_type,
             'host': host,
-            'tags': [tags]
+            'tags': [f'{key}:{value}' for key, value in tags.items()]
         }]
     }
     requests.post(url, headers=headers, json=json.dumps(payload))
