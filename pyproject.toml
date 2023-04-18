@@ -26,6 +26,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+[project.scripts]
+package-metrics = "package_metrics.metrics:main"
 
 [project.optional-dependencies]
 test = [
