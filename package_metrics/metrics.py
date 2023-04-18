@@ -27,6 +27,37 @@ def build_packages_table(packages):
     return rows
 
 
+def get_package_stats(packages):
+    stats = {
+        "Outdated": 0,
+        "Multi-Major": 0,
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 0,
+        "Exotic": 0,
+    }
+    for delta, name, current, latest in packages:
+        if delta:
+            major, minor, patch = delta
+            if major:
+                assert not minor and not patch, delta
+                if major == 1:
+                    key = "Major"
+                else:
+                    key = "Multi-Major"
+            elif minor:
+                assert not major and not patch, delta
+                key = "Minor"
+            else:
+                assert patch and not major and not minor, delta
+                key = "Patch"
+        else:
+            key = "Exotic"  # applies to yarn
+        stats[key] += 1
+        stats["Outdated"] += 1
+    return stats
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Track dependencies of a project"
@@ -36,12 +67,27 @@ def main():
         help="package manager to calculate metrics for",
         choices=["pip"]
     )
+    parser.add_argument(
+        "--stats",
+        help="generate statistics based on how out of date packages are",
+        default=False,
+        action="store_true",
+    )
     args = parser.parse_args()
 
     packages = get_packages(args.package_manager)
-    package_table = build_packages_table(packages)
-    for row in package_table:
-        print(row)
+    if args.stats:
+        stats = get_package_stats(packages)
+        # NOTE: subtle detail: we're depending on Python 3's ordered dict to
+        # maintain deterministic ordering here (critical when using
+        # --no-labels).
+        for key, value in stats.items():
+            print(f"{key}: {value}")
+
+    else:
+        package_table = build_packages_table(packages)
+        for row in package_table:
+            print(row)
 
 
 if __name__ == "__main__":
