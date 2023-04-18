@@ -16,6 +16,7 @@ maintainers = [
 license = {file = "LICENSE"}
 dependencies = [
     'requests',
+    'sh',
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
