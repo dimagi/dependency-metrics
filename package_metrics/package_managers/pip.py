@@ -5,8 +5,11 @@ from sh import Command
 from package_metrics.parsing_utils import behind
 
 
-def parse_pip():
-    """Parse the output of ``pip list --format json --outdated``"""
+def iter_pip_packages():
+    """
+    Parse the output of ``pip list --format json --outdated``
+    :return: generator containing version info for installed python packages
+    """
     package_list = _get_pip_packages()
     for pkg in json.loads(package_list):
         latest = pkg["latest_version"]

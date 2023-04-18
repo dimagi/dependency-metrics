@@ -1,12 +1,12 @@
 import argparse
 
 from package_metrics.datadog_utils import send_stats_to_datadog
-from package_metrics.package_managers.pip import parse_pip
+from package_metrics.package_managers.pip import iter_pip_packages
 
 
 def get_packages(package_manager):
     parsers = {
-        "pip": parse_pip,
+        "pip": iter_pip_packages,
     }
     return parsers[package_manager]()
 
