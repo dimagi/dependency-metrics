@@ -6,7 +6,17 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from package_metrics.constants import MetricType
-from package_metrics.datadog_utils import send_metric
+from package_metrics.datadog_utils import send_metric, send_stats_to_datadog
+
+
+@patch('package_metrics.datadog_utils.send_metric')
+def test_send_stats_to_datadog(mock_send_metric):
+    stats = {'Outdated': 15}
+    send_stats_to_datadog(stats, 'pip')
+    mock_send_metric.assert_called_with(
+        "commcare.static_analysis.dependency.python.outdated",
+        15,
+        MetricType.GAUGE)
 
 
 @patch('package_metrics.datadog_utils.requests.post')

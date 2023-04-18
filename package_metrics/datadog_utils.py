@@ -13,6 +13,19 @@ from package_metrics.constants import (
 )
 
 
+def send_stats_to_datadog(stats, package_manager):
+    """
+    :param stats: key-value pairs representing outdated counts
+    Example: {'major': 3, 'minor': 2, ...})
+    :param package_manager: package manager used to collect statistics
+    """
+    metric_env = get_metric_name_for_package_manager(package_manager)
+    metric_prefix = f"commcare.static_analysis.dependency.{metric_env}"
+    for key, value in stats.items():
+        metric_name = get_metric_name_for_stats_key(key)
+        send_metric(f"{metric_prefix}.{metric_name}", value, MetricType.GAUGE)
+
+
 def send_metric(name, value, metric_type, tags=None):
     """
     Send a specific metric to datadog
@@ -62,3 +75,24 @@ def send_metric(name, value, metric_type, tags=None):
         }]
     }
     requests.post(url, headers=headers, json=json.dumps(payload))
+
+
+def get_metric_name_for_package_manager(key):
+    metric_name_map = {
+        "pip": "python",
+        "yarn": "js",
+    }
+    return metric_name_map[key]
+
+
+def get_metric_name_for_stats_key(key):
+    metric_name_map = {
+        "Outdated": "outdated",
+        "Multi-Major": "multi_major_outdated",
+        "Major": "major_outdated",
+        "Minor": "minor_outdated",
+        "Patch": "patch_outdated",
+        "Exotic": "exotic_outdated",
+    }
+    return metric_name_map[key]
+

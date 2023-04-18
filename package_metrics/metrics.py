@@ -1,5 +1,6 @@
 import argparse
 
+from package_metrics.datadog_utils import send_stats_to_datadog
 from package_metrics.package_managers.pip import parse_pip
 
 
@@ -67,22 +68,32 @@ def main():
         help="package manager to calculate metrics for",
         choices=["pip"]
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group(required=False)
+    group.add_argument(
         "--stats",
-        help="generate statistics based on how out of date packages are",
+        help="generate statistics and output to stdout",
         default=False,
         action="store_true",
+    )
+    group.add_argument(
+        "--send",
+        help="generate statistics and send to datadog",
+        default=False,
+        action="store_true"
     )
     args = parser.parse_args()
 
     packages = get_packages(args.package_manager)
-    if args.stats:
+    if args.stats or args.send:
         stats = get_package_stats(packages)
-        # NOTE: subtle detail: we're depending on Python 3's ordered dict to
-        # maintain deterministic ordering here (critical when using
-        # --no-labels).
-        for key, value in stats.items():
-            print(f"{key}: {value}")
+        if args.stats:
+            # NOTE: subtle detail: we're depending on Python 3's ordered dict to
+            # maintain deterministic ordering here (critical when using
+            # --no-labels).
+            for key, value in stats.items():
+                print(f"{key}: {value}")
+        elif args.send:
+            send_stats_to_datadog(stats, args.package_manager)
 
     else:
         package_table = build_packages_table(packages)
