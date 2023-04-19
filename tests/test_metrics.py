@@ -32,7 +32,6 @@ class GetPackageStatsTests(TestCase):
             "Major": 0,
             "Minor": 0,
             "Patch": 0,
-            "Exotic": 0,
         })
 
     def test_outdated_major_package(self):
@@ -44,7 +43,6 @@ class GetPackageStatsTests(TestCase):
             "Major": 1,
             "Minor": 0,
             "Patch": 0,
-            "Exotic": 0,
         })
 
     def test_outdated_minor_package(self):
@@ -56,7 +54,6 @@ class GetPackageStatsTests(TestCase):
             "Major": 0,
             "Minor": 1,
             "Patch": 0,
-            "Exotic": 0,
         })
 
     def test_outdated_patch_package(self):
@@ -68,5 +65,4 @@ class GetPackageStatsTests(TestCase):
             "Major": 0,
             "Minor": 0,
             "Patch": 1,
-            "Exotic": 0,
         })

@@ -22,7 +22,7 @@ def build_packages_table(packages):
         if delta:
             behind = ".".join(str(v) for v in delta)
         else:
-            behind = "n/a"
+            continue
         rows.append(build_row(behind, name, current, latest))
 
     return rows
@@ -35,7 +35,6 @@ def get_package_stats(packages):
         "Major": 0,
         "Minor": 0,
         "Patch": 0,
-        "Exotic": 0,
     }
     for delta, name, current, latest in packages:
         if delta:
@@ -52,10 +51,8 @@ def get_package_stats(packages):
             else:
                 assert patch and not major and not minor, delta
                 key = "Patch"
-        else:
-            key = "Exotic"  # applies to yarn
-        stats[key] += 1
-        stats["Outdated"] += 1
+            stats[key] += 1
+            stats["Outdated"] += 1
     return stats
 
 
@@ -88,8 +85,7 @@ def main():
         stats = get_package_stats(packages)
         if args.stats:
             # NOTE: subtle detail: we're depending on Python 3's ordered dict to
-            # maintain deterministic ordering here (critical when using
-            # --no-labels).
+            # maintain deterministic ordering here
             for key, value in stats.items():
                 print(f"{key}: {value}")
         elif args.send:
