@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from package_metrics.parsing_utils import behind, vsplit
+from package_metrics.parsing_utils import behind, parse_version
 
 
 class BehindTests(TestCase):
@@ -45,20 +45,32 @@ class BehindTests(TestCase):
         self.assertEqual(delta, [0, 0, 5])
 
 
-class VsplitTests(TestCase):
+class ParseVersionTests(TestCase):
 
     def test_major_minor_patch(self):
-        version = vsplit("3.2.1")
+        version = parse_version("3.2.1")
         self.assertEqual(version, [3, 2, 1])
 
     def test_major_minor(self):
-        version = vsplit("3.2")
+        version = parse_version("3.2")
         self.assertEqual(version, [3, 2, 0])
 
     def test_major(self):
-        version = vsplit("3")
+        version = parse_version("3")
         self.assertEqual(version, [3, 0, 0])
 
     def test_non_semvar(self):
-        version = vsplit("4.3.2.1")
+        version = parse_version("4.3.2.1")
         self.assertEqual(version, [4, 3, 2])
+
+    def test_named_version(self):
+        version = parse_version("alpha")
+        self.assertEqual(version, [0, 0, 0])
+
+    def test_combination_of_numbers_and_names(self):
+        version = parse_version("2.1rc1")
+        self.assertEqual(version, [2, 1, 0])
+
+    def test_multi_digit_number_in_name(self):
+        version = parse_version("2.10rc1")
+        self.assertEqual(version, [2, 10, 0])
