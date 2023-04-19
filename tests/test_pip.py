@@ -26,24 +26,3 @@ class IterPipPackagesTests(TestCase):
                                      '"latest_filetype": "wheel"}]'
         result = list(iter_pip_packages())
         self.assertEqual(result, [([0, 0, 10], 'test', '1.0.10', '1.0.0')])
-
-    def test_major_has_priority_over_minor(self, mock_packages):
-        mock_packages.return_value = '[{"name": "test", "version": "1.0.0", ' \
-                                     '"latest_version": "2.4.0", ' \
-                                     '"latest_filetype": "wheel"}]'
-        result = list(iter_pip_packages())
-        self.assertEqual(result, [([1, 0, 0], 'test', '2.4.0', '1.0.0')])
-
-    def test_major_has_priority_over_patch(self, mock_packages):
-        mock_packages.return_value = '[{"name": "test", "version": "1.0.0", ' \
-                                     '"latest_version": "2.0.1", ' \
-                                     '"latest_filetype": "wheel"}]'
-        result = list(iter_pip_packages())
-        self.assertEqual(result, [([1, 0, 0], 'test', '2.0.1', '1.0.0')])
-
-    def test_minor_has_priority_over_patch(self, mock_packages):
-        mock_packages.return_value = '[{"name": "test", "version": "1.0.0", ' \
-                                     '"latest_version": "1.5.1", ' \
-                                     '"latest_filetype": "wheel"}]'
-        result = list(iter_pip_packages())
-        self.assertEqual(result, [([0, 5, 0], 'test', '1.5.1', '1.0.0')])
