@@ -32,6 +32,7 @@ class GetPackageStatsTests(TestCase):
             "Major": 0,
             "Minor": 0,
             "Patch": 0,
+            "Unknown": 0,
         })
 
     def test_outdated_major_package(self):
@@ -43,6 +44,7 @@ class GetPackageStatsTests(TestCase):
             "Major": 1,
             "Minor": 0,
             "Patch": 0,
+            "Unknown": 0,
         })
 
     def test_outdated_minor_package(self):
@@ -54,6 +56,7 @@ class GetPackageStatsTests(TestCase):
             "Major": 0,
             "Minor": 1,
             "Patch": 0,
+            "Unknown": 0,
         })
 
     def test_outdated_patch_package(self):
@@ -65,4 +68,17 @@ class GetPackageStatsTests(TestCase):
             "Major": 0,
             "Minor": 0,
             "Patch": 1,
+            "Unknown": 0,
+        })
+
+    def test_unknown_package(self):
+        packages = [(None, 'test', 'unknown', '2.5.1')]
+        stats = get_package_stats(packages)
+        self.assertEqual(stats, {
+            "Outdated": 1,
+            "Multi-Major": 0,
+            "Major": 0,
+            "Minor": 0,
+            "Patch": 0,
+            "Unknown": 1,
         })

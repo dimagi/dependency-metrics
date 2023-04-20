@@ -13,8 +13,7 @@ def get_yarn_packages():
         latest_version = pull_latest_version(package["name"])
         if package["version"] != latest_version:
             # only care if it is actually outdated
-            # TODO: handle when latest_version is None
-            package["latest_version"] = latest_version
+            package["latest_version"] = latest_version if latest_version else "unknown"
             outdated_packages.append(package)
     return outdated_packages
 

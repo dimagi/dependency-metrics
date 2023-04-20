@@ -29,6 +29,17 @@ class GetYarnPackagesTests(TestCase):
         self.assertEqual(packages, [
             {"name": "test", "version": "1.0.0", "latest_version": "5.0.0"}])
 
+    @patch('package_metrics.package_managers.yarn.parse_yarn_list')
+    @patch('package_metrics.package_managers.yarn.pull_latest_version')
+    def test_unknown_latest_version(self, mock_latest_version, mock_yarn_list):
+        mock_latest_version.return_value = None
+        mock_yarn_list.return_value = [{"name": "test", "version": "1.0.0"}]
+
+        packages = get_yarn_packages()
+
+        self.assertEqual(packages, [
+            {"name": "test", "version": "1.0.0", "latest_version": "unknown"}])
+
 
 @patch('package_metrics.package_managers.yarn.Yarn.list')
 class ParseYarnListTests(TestCase):

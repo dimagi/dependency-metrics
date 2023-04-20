@@ -23,3 +23,9 @@ class IterPackagesTests(TestCase):
             {"name": "test", "version": "1.0.0", "latest_version": "1.0.10"}]
         result = list(iter_packages(mock.ANY))
         self.assertEqual(result, [([0, 0, 10], 'test', '1.0.10', '1.0.0')])
+
+    def test_unknown_version(self, mock_packages):
+        mock_packages.return_value = [
+            {"name": "test", "version": "1.0.0", "latest_version": "unknown"}]
+        result = list(iter_packages(mock.ANY))
+        self.assertEqual(result, [(None, 'test', 'unknown', '1.0.0')])

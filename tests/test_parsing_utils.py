@@ -44,6 +44,10 @@ class BehindTests(TestCase):
         delta = behind("1.0.5", "1.0.0")
         self.assertEqual(delta, [0, 0, 5])
 
+    def test_unknown_latest_version(self):
+        delta = behind("unknown", "1.0.0")
+        self.assertEqual(delta, None)
+
 
 class ParseVersionTests(TestCase):
 

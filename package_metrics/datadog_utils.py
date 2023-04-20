@@ -92,6 +92,7 @@ def get_metric_name_for_stats_key(key):
         "Major": "major_outdated",
         "Minor": "minor_outdated",
         "Patch": "patch_outdated",
+        "Unknown": "unknown"
     }
     return metric_name_map[key]
 

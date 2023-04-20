@@ -2,6 +2,8 @@ import re
 
 
 def behind(latest, current):
+    if latest == 'unknown':
+        return None
     delta = [0, 0, 0]
     parsed_latest = parse_version(latest)
     parsed_current = parse_version(current)

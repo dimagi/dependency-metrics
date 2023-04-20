@@ -16,7 +16,7 @@ def build_packages_table(packages):
         if delta:
             behind = ".".join(str(v) for v in delta)
         else:
-            continue
+            behind = "n/a"
         rows.append(build_row(behind, name, current, latest))
 
     return rows
@@ -29,6 +29,7 @@ def get_package_stats(packages):
         "Major": 0,
         "Minor": 0,
         "Patch": 0,
+        "Unknown": 0,
     }
     for delta, name, current, latest in packages:
         if delta:
@@ -45,8 +46,10 @@ def get_package_stats(packages):
             else:
                 assert patch and not major and not minor, delta
                 key = "Patch"
-            stats[key] += 1
-            stats["Outdated"] += 1
+        else:
+            key = "Unknown"
+        stats[key] += 1
+        stats["Outdated"] += 1
     return stats
 
 
