@@ -1,14 +1,8 @@
 import argparse
 
+from package_metrics.constants import PIP
 from package_metrics.datadog_utils import send_stats_to_datadog
-from package_metrics.package_managers.pip import iter_pip_packages
-
-
-def get_packages(package_manager):
-    parsers = {
-        "pip": iter_pip_packages,
-    }
-    return parsers[package_manager]()
+from package_metrics.package_managers.utils import iter_packages
 
 
 def build_packages_table(packages):
@@ -63,7 +57,7 @@ def main():
     parser.add_argument(
         "package_manager",
         help="package manager to calculate metrics for",
-        choices=["pip"]
+        choices=[PIP]
     )
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument(
@@ -80,7 +74,7 @@ def main():
     )
     args = parser.parse_args()
 
-    packages = get_packages(args.package_manager)
+    packages = iter_packages(args.package_manager)
     if args.stats or args.send:
         stats = get_package_stats(packages)
         if args.stats:

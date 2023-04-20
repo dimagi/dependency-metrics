@@ -9,7 +9,7 @@ from package_metrics.constants import (
     DATADOG_APP_KEY,
     GITHUB_ACTIONS,
     NOSE_DIVIDED_WE_RUN,
-    MetricType,
+    MetricType, PIP,
 )
 
 
@@ -79,7 +79,7 @@ def send_metric(name, value, metric_type, tags=None):
 
 def get_metric_name_for_package_manager(key):
     metric_name_map = {
-        "pip": "python",
+        PIP: "python",
         "yarn": "js",
     }
     return metric_name_map[key]
