@@ -23,7 +23,7 @@ def parse_version(version):
         try:
             num = int(n)
         except ValueError:
-            match = re.search(r'\d+', n)
+            match = re.search(r'^\d+', n)
             # default to 0, unless
             num = int(match.group()) if match else 0
         semvar_version.append(num)

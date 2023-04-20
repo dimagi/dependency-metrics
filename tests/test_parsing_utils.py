@@ -74,3 +74,7 @@ class ParseVersionTests(TestCase):
     def test_multi_digit_number_in_name(self):
         version = parse_version("2.10rc1")
         self.assertEqual(version, [2, 10, 0])
+
+    def test_number_after_name_not_used(self):
+        version = parse_version("3.a3.1")
+        self.assertEqual(version, [3, 0, 1])
