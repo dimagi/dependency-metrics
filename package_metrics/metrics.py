@@ -1,6 +1,6 @@
 import argparse
 
-from package_metrics.constants import PIP
+from package_metrics.constants import PIP, YARN
 from package_metrics.datadog_utils import send_stats_to_datadog
 from package_metrics.package_managers.utils import iter_packages
 
@@ -57,7 +57,7 @@ def main():
     parser.add_argument(
         "package_manager",
         help="package manager to calculate metrics for",
-        choices=[PIP]
+        choices=[PIP, YARN]
     )
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument(

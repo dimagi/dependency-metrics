@@ -6,6 +6,7 @@ GITHUB_ACTIONS = 'GITHUB_ACTIONS'
 NOSE_DIVIDED_WE_RUN = 'NOSE_DIVIDED_WE_RUN'
 
 PIP = 'pip'
+YARN = 'yarn'
 
 
 class MetricType:

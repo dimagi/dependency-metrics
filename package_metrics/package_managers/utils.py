@@ -1,5 +1,6 @@
-from package_metrics.constants import PIP
+from package_metrics.constants import PIP, YARN
 from package_metrics.package_managers.pip import get_pip_packages
+from package_metrics.package_managers.yarn import get_yarn_packages
 from package_metrics.parsing_utils import behind
 
 
@@ -22,6 +23,7 @@ def get_packages(package_manager):
     """
     package_list_map = {
         PIP: get_pip_packages,
+        YARN: get_yarn_packages,
     }
 
     return package_list_map[package_manager]()
