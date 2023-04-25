@@ -1,14 +1,8 @@
 import argparse
 
+from package_metrics.constants import PIP, YARN
 from package_metrics.datadog_utils import send_stats_to_datadog
-from package_metrics.package_managers.pip import iter_pip_packages
-
-
-def get_packages(package_manager):
-    parsers = {
-        "pip": iter_pip_packages,
-    }
-    return parsers[package_manager]()
+from package_metrics.package_managers.utils import iter_packages
 
 
 def build_packages_table(packages):
@@ -22,7 +16,7 @@ def build_packages_table(packages):
         if delta:
             behind = ".".join(str(v) for v in delta)
         else:
-            continue
+            behind = "n/a"
         rows.append(build_row(behind, name, current, latest))
 
     return rows
@@ -35,6 +29,7 @@ def get_package_stats(packages):
         "Major": 0,
         "Minor": 0,
         "Patch": 0,
+        "Unknown": 0,
     }
     for delta, name, current, latest in packages:
         if delta:
@@ -51,8 +46,10 @@ def get_package_stats(packages):
             else:
                 assert patch and not major and not minor, delta
                 key = "Patch"
-            stats[key] += 1
-            stats["Outdated"] += 1
+        else:
+            key = "Unknown"
+        stats[key] += 1
+        stats["Outdated"] += 1
     return stats
 
 
@@ -63,7 +60,7 @@ def main():
     parser.add_argument(
         "package_manager",
         help="package manager to calculate metrics for",
-        choices=["pip"]
+        choices=[PIP, YARN]
     )
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument(
@@ -80,7 +77,7 @@ def main():
     )
     args = parser.parse_args()
 
-    packages = get_packages(args.package_manager)
+    packages = iter_packages(args.package_manager)
     if args.stats or args.send:
         stats = get_package_stats(packages)
         if args.stats:

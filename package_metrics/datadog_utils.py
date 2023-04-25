@@ -9,7 +9,7 @@ from package_metrics.constants import (
     DATADOG_APP_KEY,
     GITHUB_ACTIONS,
     NOSE_DIVIDED_WE_RUN,
-    MetricType,
+    MetricType, PIP, YARN,
 )
 
 
@@ -79,8 +79,8 @@ def send_metric(name, value, metric_type, tags=None):
 
 def get_metric_name_for_package_manager(key):
     metric_name_map = {
-        "pip": "python",
-        "yarn": "js",
+        PIP: "python",
+        YARN: "js",
     }
     return metric_name_map[key]
 
@@ -92,6 +92,7 @@ def get_metric_name_for_stats_key(key):
         "Major": "major_outdated",
         "Minor": "minor_outdated",
         "Patch": "patch_outdated",
+        "Unknown": "unknown"
     }
     return metric_name_map[key]
 

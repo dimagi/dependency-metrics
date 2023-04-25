@@ -1,25 +1,25 @@
 import json
 
-from sh import Command
-
-from package_metrics.parsing_utils import behind
+import sh
 
 
-def iter_pip_packages():
+def get_pip_packages():
     """
-    Parse the output of ``pip list --format json --outdated``
-    :return: generator containing version info for installed python packages
+    Return relevant package version info from pip list output
     """
-    package_list = _get_pip_packages()
-    for pkg in json.loads(package_list):
-        latest = pkg["latest_version"]
-        current = pkg["version"]
-        yield behind(latest, current), pkg["name"], latest, current
+    pip_packages = json.loads(Pip.list())
+    cleaned_package_info_list = []
+    for pkg_info in pip_packages:
+        del pkg_info['latest_filetype']
+        cleaned_package_info_list.append(pkg_info)
+    return cleaned_package_info_list
 
 
-def _get_pip_packages():
-    """
-    Equivalent to ``pip list --format json --outdated``
-    """
-    pip = Command("pip")
-    return pip("list", "--format", "json", "--outdated")
+class Pip:
+
+    @staticmethod
+    def list():
+        """
+        Equivalent to ``pip list --format json --outdated``
+        """
+        return sh.pip("list", "--format", "json", "--outdated")
