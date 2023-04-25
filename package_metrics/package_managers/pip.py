@@ -1,6 +1,6 @@
 import json
 
-from sh import Command
+import sh
 
 
 def get_pip_packages():
@@ -22,5 +22,4 @@ class Pip:
         """
         Equivalent to ``pip list --format json --outdated``
         """
-        pip = Command("pip")
-        return pip("list", "--format", "json", "--outdated")
+        return sh.pip("list", "--format", "json", "--outdated")

@@ -1,4 +1,4 @@
-from sh import Command
+import sh
 
 from package_metrics.exceptions import Crash
 
@@ -59,21 +59,18 @@ class Yarn:
         """
         Equivalent to ``yarn info <package_name> dist-tags.latest``
         """
-        yarn = Command("yarn")
-        return yarn("info", package_name, "dist-tags.latest")
+        return sh.yarn("info", package_name, "dist-tags.latest")
 
     @staticmethod
     def list():
         """
         Equivalent to ``yarn list --depth 0``
         """
-        yarn = Command("yarn")
-        return yarn("list", "--depth", "0")
+        return sh.yarn("list", "--depth", "0")
 
     @staticmethod
     def version():
         """
         Equivalent to ``yarn --version``
         """
-        yarn = Command("yarn")
-        return yarn("--version")
+        return sh.yarn("--version")
