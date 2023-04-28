@@ -14,6 +14,8 @@ jobs:
           python-version: '3.9'
       - name: install test requirements
         run: pip install -e .[test]
+      - name: set unit test env var
+        run: export UNIT_TESTING=1
       - name: run nose2
         run: nose2
 
