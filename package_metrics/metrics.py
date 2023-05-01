@@ -6,6 +6,15 @@ from package_metrics.package_managers.utils import iter_packages
 
 
 def build_packages_table(packages):
+    """ Builds a table representing how out of date dependencies are
+    Example:
+    Behind   Package                      Latest       Version
+    n/a      At.js                        exotic       1.5.3
+    ...
+    0.0.1    bootstrap-timepicker         0.5.2        0.5.1
+    ...
+    12.0.0   sinon                        14.0.0       2.3.2
+    """
     def build_row(behind, name, current, latest):
         return f"{behind:8s} {name:28s} {current:12s} {latest}"
 
@@ -23,6 +32,7 @@ def build_packages_table(packages):
 
 
 def get_package_stats(packages):
+    """Displays a count for each version category of out of date dependencies"""
     stats = {
         "Outdated": 0,
         "Multi-Major": 0,
