@@ -55,3 +55,20 @@ This is required to make use of the `--send` option, enabling the ability to sen
 
 #### DataDog
 Set the `DATADOG_API_KEY` and `DATADOG_APP_KEY` environment variables in the environment you will run `dependency-metrics <package_manager> --send` from.
+
+### Development
+
+#### Requirements
+
+```commandline
+pip install -e .  # installs dependencies defined in pyproject.toml
+pip install -e .[test]  # installs test dependencies -- '.[test]' if using zsh
+```
+
+#### Tests
+Must install test dependencies first. See [requirements](#requirements) above.
+
+```commandline
+nose2  # runs all tests
+nose2 dot.path.to.file.class.or.test  # runs specific test
+```
