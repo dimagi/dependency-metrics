@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from package_metrics.constants import MetricType, GITHUB_ACTIONS
+from package_metrics.constants import MetricType
 from package_metrics.datadog_utils import send_metric, send_stats_to_datadog
 
 
@@ -41,7 +41,7 @@ class SendMetricTests(TestCase):
             send_metric('name', 'value', 'invalid')
 
     @freeze_time('2020-01-01 10:20:30')
-    def test_name_and_value_values_are_correct(self, mock_post):
+    def test_default_values(self, mock_post):
         self._setup_env(DATADOG_API_KEY='api_key', DATADOG_APP_KEY='app_key')
 
         send_metric('name', 'value', MetricType.GAUGE)
@@ -50,38 +50,17 @@ class SendMetricTests(TestCase):
         payload = json.loads(kwargs['json'])
         self.assertEqual(payload['series'][0]['metric'], 'name')
         self.assertEqual(payload['series'][0]['points'], [[1577874030, 'value']])
-
-    def test_host_and_environment_is_unknown_by_default(self, mock_post):
-        self._setup_env(DATADOG_API_KEY='api_key', DATADOG_APP_KEY='app_key')
-        # workaround for running this test within github actions
-        if os.environ.get(GITHUB_ACTIONS) == 'true':
-            def reset_github_action():
-                os.environ[GITHUB_ACTIONS] = 'true'
-            os.environ[GITHUB_ACTIONS] = 'false'
-            self.addCleanup(reset_github_action)
-
-        send_metric('name', 'value', MetricType.GAUGE)
-
-        args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
         self.assertEqual(payload['series'][0]['host'], 'unknown')
-        self.assertTrue('environment:unknown' in payload['series'][0]['tags'])
 
-    def test_host_and_environment_is_github_when_in_github_action(self, mock_post):
-        """
-        The GITHUB_ACTIONS environment variable is set when running from a
-        github action
-        """
+    def test_repository_set_as_host(self, mock_post):
         self._setup_env(DATADOG_API_KEY='api_key', DATADOG_APP_KEY='app_key',
-                        GITHUB_ACTIONS='test')
+                        REPO='test-repo')
 
         send_metric('name', 'value', MetricType.GAUGE)
 
         args, kwargs = mock_post.call_args
         payload = json.loads(kwargs['json'])
-        self.assertEqual(payload['series'][0]['host'], 'github.com')
-        self.assertTrue(
-            'environment:github_actions' in payload['series'][0]['tags'])
+        self.assertEqual(payload['series'][0]['host'], 'test-repo')
 
     def test_metric_type_is_gauge_when_set(self, mock_post):
         self._setup_env(DATADOG_API_KEY='api_key', DATADOG_APP_KEY='app_key')
