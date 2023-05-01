@@ -1,0 +1,21 @@
+name: package-metrics tests
+on:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+      - name: install test requirements
+        run: pip install -e .[test]
+      - name: set unit test env var
+        run: export UNIT_TESTING=1
+      - name: run nose2
+        run: nose2
+
