@@ -1,4 +1,4 @@
-name: package-metrics tests
+name: dependency-metrics tests
 on:
   pull_request:
     branches:

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from package_metrics.metrics import build_packages_table, get_package_stats
+from dependency_metrics.metrics import build_packages_table, get_package_stats
 
 
 class BuildPackagesTableTests(TestCase):

@@ -1,8 +1,8 @@
 import argparse
 
-from package_metrics.constants import PIP, YARN
-from package_metrics.datadog_utils import send_stats_to_datadog
-from package_metrics.package_managers.utils import iter_packages
+from dependency_metrics.constants import PIP, YARN
+from dependency_metrics.datadog_utils import send_stats_to_datadog
+from dependency_metrics.package_managers.utils import iter_packages
 
 
 def build_packages_table(packages):

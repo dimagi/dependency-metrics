@@ -1,9 +1,9 @@
 from unittest import TestCase, mock
 
-from package_metrics.package_managers.utils import iter_packages
+from dependency_metrics.package_managers.utils import iter_packages
 
 
-@mock.patch('package_metrics.package_managers.utils.get_packages')
+@mock.patch('dependency_metrics.package_managers.utils.get_packages')
 class IterPackagesTests(TestCase):
 
     def test_major_version_out_of_date(self, mock_packages):

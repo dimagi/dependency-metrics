@@ -1,9 +1,9 @@
 from unittest import TestCase, mock
 
-from package_metrics.package_managers.pip import get_pip_packages
+from dependency_metrics.package_managers.pip import get_pip_packages
 
 
-@mock.patch('package_metrics.package_managers.pip.Pip')
+@mock.patch('dependency_metrics.package_managers.pip.Pip')
 class GetPipPackagesTests(TestCase):
 
     def test_returned_format_is_correct(self, mock_pip):

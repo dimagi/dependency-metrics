@@ -2,8 +2,8 @@ from textwrap import dedent
 from unittest import TestCase, mock
 from unittest.mock import patch
 
-from package_metrics.exceptions import Crash
-from package_metrics.package_managers.yarn import (
+from dependency_metrics.exceptions import Crash
+from dependency_metrics.package_managers.yarn import (
     get_yarn_packages,
     parse_yarn_list,
     pull_latest_version
@@ -12,14 +12,14 @@ from package_metrics.package_managers.yarn import (
 
 class GetYarnPackagesTests(TestCase):
 
-    @patch('package_metrics.package_managers.yarn.Yarn')
+    @patch('dependency_metrics.package_managers.yarn.Yarn')
     def test_exception_raised_if_wrong_yarn_version(self, mock_yarn):
         mock_yarn.version.return_value = "2.0"
         with self.assertRaises(Crash):
             get_yarn_packages()
 
-    @patch('package_metrics.package_managers.yarn.parse_yarn_list')
-    @patch('package_metrics.package_managers.yarn.pull_latest_version')
+    @patch('dependency_metrics.package_managers.yarn.parse_yarn_list')
+    @patch('dependency_metrics.package_managers.yarn.pull_latest_version')
     def test_correct_format_is_returned(self, mock_latest_version, mock_yarn_list):
         mock_latest_version.return_value = "5.0.0"
         mock_yarn_list.return_value = [{"name": "test", "version": "1.0.0"}]
@@ -29,8 +29,8 @@ class GetYarnPackagesTests(TestCase):
         self.assertEqual(packages, [
             {"name": "test", "version": "1.0.0", "latest_version": "5.0.0"}])
 
-    @patch('package_metrics.package_managers.yarn.parse_yarn_list')
-    @patch('package_metrics.package_managers.yarn.pull_latest_version')
+    @patch('dependency_metrics.package_managers.yarn.parse_yarn_list')
+    @patch('dependency_metrics.package_managers.yarn.pull_latest_version')
     def test_unknown_latest_version(self, mock_latest_version, mock_yarn_list):
         mock_latest_version.return_value = None
         mock_yarn_list.return_value = [{"name": "test", "version": "1.0.0"}]
@@ -41,7 +41,7 @@ class GetYarnPackagesTests(TestCase):
             {"name": "test", "version": "1.0.0", "latest_version": "unknown"}])
 
 
-@patch('package_metrics.package_managers.yarn.Yarn.list')
+@patch('dependency_metrics.package_managers.yarn.Yarn.list')
 class ParseYarnListTests(TestCase):
 
     def test_expected_output_is_parsed_successfully(self, mock_yarn_list):
@@ -69,7 +69,7 @@ class ParseYarnListTests(TestCase):
         self.assertEqual(packages, [{"name": "test", "version": "5.0"}])
 
 
-@patch('package_metrics.package_managers.yarn.Yarn.latest_version')
+@patch('dependency_metrics.package_managers.yarn.Yarn.latest_version')
 class PullLatestVersionTests(TestCase):
 
     def test_returns_latest_version_successfully(self, mock_latest_version):
