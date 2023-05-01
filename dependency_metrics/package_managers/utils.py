@@ -1,7 +1,7 @@
-from package_metrics.constants import PIP, YARN
-from package_metrics.package_managers.pip import get_pip_packages
-from package_metrics.package_managers.yarn import get_yarn_packages
-from package_metrics.parsing_utils import behind
+from dependency_metrics.constants import PIP, YARN
+from dependency_metrics.package_managers.pip import get_pip_packages
+from dependency_metrics.package_managers.yarn import get_yarn_packages
+from dependency_metrics.parsing_utils import behind
 
 
 def iter_packages(package_manager):

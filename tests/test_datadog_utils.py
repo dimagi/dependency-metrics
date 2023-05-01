@@ -5,11 +5,11 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from package_metrics.constants import MetricType
-from package_metrics.datadog_utils import send_metric, send_stats_to_datadog
+from dependency_metrics.constants import MetricType
+from dependency_metrics.datadog_utils import send_metric, send_stats_to_datadog
 
 
-@patch('package_metrics.datadog_utils.send_metric')
+@patch('dependency_metrics.datadog_utils.send_metric')
 def test_send_stats_to_datadog(mock_send_metric):
     stats = {'Outdated': 15}
     send_stats_to_datadog(stats, 'pip')
@@ -19,7 +19,7 @@ def test_send_stats_to_datadog(mock_send_metric):
         MetricType.GAUGE)
 
 
-@patch('package_metrics.datadog_utils.requests.post')
+@patch('dependency_metrics.datadog_utils.requests.post')
 class SendMetricTests(TestCase):
 
     def test_raises_error_if_api_key_not_found(self, mock_post):

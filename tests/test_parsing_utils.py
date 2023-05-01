@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from package_metrics.parsing_utils import behind, parse_version
+from dependency_metrics.parsing_utils import behind, parse_version
 
 
 class BehindTests(TestCase):

@@ -1,6 +1,6 @@
 import sh
 
-from package_metrics.exceptions import Crash
+from dependency_metrics.exceptions import Crash
 
 
 def get_yarn_packages():

@@ -4,7 +4,7 @@ import time
 
 import requests
 
-from package_metrics.constants import (
+from dependency_metrics.constants import (
     DATADOG_API_KEY,
     DATADOG_APP_KEY,
     PIP,
