@@ -89,16 +89,6 @@ class SendMetricTests(TestCase):
         payload = json.loads(kwargs['json'])
         self.assertEqual(payload['series'][0]['type'], MetricType.RATE)
 
-    def test_partition_is_correct_when_nose_divided_we_run_is_set(self, mock_post):
-        self._setup_env(DATADOG_API_KEY='api_key', DATADOG_APP_KEY='app_key',
-                        NOSE_DIVIDED_WE_RUN='1')
-
-        send_metric('name', 'value', MetricType.RATE)
-
-        args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
-        self.assertTrue('partition:1' in payload['series'][0]['tags'])
-
     def _setup_env(self, **kwargs):
         """
         Useful to simplify test setup

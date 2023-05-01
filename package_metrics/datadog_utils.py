@@ -7,7 +7,6 @@ import requests
 from package_metrics.constants import (
     DATADOG_API_KEY,
     DATADOG_APP_KEY,
-    NOSE_DIVIDED_WE_RUN,
     PIP,
     REPO,
     YARN,
@@ -56,9 +55,6 @@ def send_metric(name, value, metric_type, tags=None):
     }
 
     tags = tags or {}
-    if os.environ.get(NOSE_DIVIDED_WE_RUN):
-        tags['partition'] = os.environ[NOSE_DIVIDED_WE_RUN]
-
     payload = {
         'series': [{
             'metric': name,
