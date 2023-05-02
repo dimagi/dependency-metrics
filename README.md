@@ -32,7 +32,7 @@ Use the `--stats` option to generate a simple dictionary that displays the total
 
 ```commandline
 $ dependency-metrics pip --stats
-Outdated: 1
+Outdated: 2
 Multi-Major: 1
 Major: 0
 Minor: 1
