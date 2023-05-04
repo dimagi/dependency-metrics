@@ -1,3 +1,6 @@
+import json
+from json import JSONDecodeError
+
 import sh
 
 from dependency_metrics.exceptions import Crash
@@ -19,13 +22,24 @@ def get_yarn_packages():
 
 
 def pull_latest_version(package_name):
-    lines = Yarn.latest_version(package_name)
-    if not lines:
+    """
+    Attempts to pull latest version of package from yarn
+    :param package_name: name of javascript package
+    :returns: returns version as string, or None if not found
+    """
+    string_output = Yarn.latest_version(package_name)
+    if not string_output:
         return None
-    # trim first and last line from output as they are irrelevant
-    lines = lines.splitlines()[1:-1]
-    assert len(lines) == 1, f"{package_name}: invalid latest: {lines!r}"
-    return lines[0].strip()
+
+    try:
+        json_output = json.loads(string_output)
+    except JSONDecodeError:
+        return None
+
+    if json_output.get('type') == 'inspect':
+        return json_output.get('data')
+
+    return None
 
 
 def parse_yarn_list():
@@ -50,16 +64,14 @@ def parse_yarn_list():
 class Yarn:
     """
     Class to house raw yarn commands
-    NOTE: avoid using --json option because the output includes a lot of
-    irrelevant lines
     """
 
     @staticmethod
     def latest_version(package_name):
         """
-        Equivalent to ``yarn info <package_name> dist-tags.latest``
+        Equivalent to ``yarn info <package_name> dist-tags.latest --json``
         """
-        return sh.yarn("info", package_name, "dist-tags.latest")
+        return sh.yarn("info", package_name, "dist-tags.latest", "--json")
 
     @staticmethod
     def list():

@@ -73,9 +73,7 @@ class ParseYarnListTests(TestCase):
 class PullLatestVersionTests(TestCase):
 
     def test_returns_latest_version_successfully(self, mock_latest_version):
-        mock_latest_version.return_value = dedent("""yarn info v1.22.19
-        5.0.0
-        Done in 0.16s.""")
+        mock_latest_version.return_value = '{"type":"inspect","data":"5.0.0"}\n'
         latest_version = pull_latest_version(mock.ANY)
         self.assertEqual(latest_version, "5.0.0")
 
@@ -84,7 +82,12 @@ class PullLatestVersionTests(TestCase):
         latest_version = pull_latest_version(mock.ANY)
         self.assertIsNone(latest_version)
 
-    def test_raises_assertion_error_if_output_line_count_mismatch(self, mock_latest_version):
-        mock_latest_version.return_value = "5.0.0"
-        with self.assertRaises(AssertionError):
-            pull_latest_version(mock.ANY)
+    def test_returns_none_if_error(self, mock_latest_version):
+        mock_latest_version.return_value = '{"type": "error", "data": "Received invalid response from npm."}\n'
+        latest_version = pull_latest_version(mock.ANY)
+        self.assertIsNone(latest_version)
+
+    def test_returns_none_if_json_load_fails(self, mock_latest_version):
+        mock_latest_version.return_value = ''
+        latest_version = pull_latest_version(mock.ANY)
+        self.assertIsNone(latest_version)
