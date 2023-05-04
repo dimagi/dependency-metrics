@@ -1,4 +1,3 @@
-import json
 import os
 import time
 
@@ -64,7 +63,7 @@ def send_metric(name, value, metric_type, tags=None):
             'tags': [f'{key}:{value}' for key, value in tags.items()]
         }]
     }
-    requests.post(url, headers=headers, json=json.dumps(payload))
+    requests.post(url, headers=headers, json=payload)
 
 
 def get_metric_name_for_package_manager(key):
