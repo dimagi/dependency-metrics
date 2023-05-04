@@ -3,6 +3,7 @@ from json import JSONDecodeError
 
 import sh
 
+from dependency_metrics.constants import UNKNOWN_VERSION
 from dependency_metrics.exceptions import Crash
 
 
@@ -16,7 +17,7 @@ def get_yarn_packages():
         latest_version = pull_latest_version(package["name"])
         if package["version"] != latest_version:
             # only care if it is actually outdated
-            package["latest_version"] = latest_version if latest_version else "unknown"
+            package["latest_version"] = latest_version
             outdated_packages.append(package)
     return outdated_packages
 
@@ -25,21 +26,21 @@ def pull_latest_version(package_name):
     """
     Attempts to pull latest version of package from yarn
     :param package_name: name of javascript package
-    :returns: returns version as string, or None if not found
+    :returns: returns version as string, or UNKNOWN_VERSION if not found
     """
     string_output = Yarn.latest_version(package_name)
     if not string_output:
-        return None
+        return UNKNOWN_VERSION
 
     try:
         json_output = json.loads(string_output)
     except JSONDecodeError:
-        return None
+        return UNKNOWN_VERSION
 
     if json_output.get('type') == 'inspect':
         return json_output.get('data')
 
-    return None
+    return UNKNOWN_VERSION
 
 
 def parse_yarn_list():
