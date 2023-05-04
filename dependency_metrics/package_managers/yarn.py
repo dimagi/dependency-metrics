@@ -6,6 +6,30 @@ import sh
 from dependency_metrics.constants import UNKNOWN_VERSION
 from dependency_metrics.exceptions import Crash
 
+"""
+Yarn doesn't have any explicitly stated naming conventions for packages.
+See here: https://yarnpkg.com/configuration/manifest. It is unclear if 
+package names are case-sensitive or not.
+
+When using ``yarn info`` for a specific package, yarn expects the name defined
+in package.json to be used, which is not necessarily the same as the name 
+fetched via ``yarn list``.
+
+Example:
+``yarn list --depth 0 | grep At.js`` => At.js@1.5.3
+``yarn info At.js dist-tags.latest --json`` => {"type": "error", "data": "Received invalid response from npm."}
+``yarn info at.js dist-tags.latest --json`` => {"type":"inspect","data":"1.5.4"}
+
+The current behavior is to only use the name obtained from ``yarn list``. If 
+that results in an error, the code below sets ``latest_version`` to "unknown". 
+This has been the behavior up until now, so this will continue to be the 
+behavior.
+
+If new information is found that clearly states yarn package names are 
+case-insensitive, then the behavior can change to retry package names that fail 
+with a lower cased version of the name.
+"""
+
 
 def get_yarn_packages():
     version = Yarn.version()
