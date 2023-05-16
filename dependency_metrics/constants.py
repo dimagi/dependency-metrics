@@ -5,6 +5,8 @@ REPO = "REPO"
 PIP = 'pip'
 YARN = 'yarn'
 
+UNKNOWN_VERSION = "unknown"
+
 
 class MetricType:
     GAUGE = 'gauge'
