@@ -47,7 +47,7 @@ class SendMetricTests(TestCase):
         send_metric('name', 'value', MetricType.GAUGE)
 
         args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
+        payload = kwargs['json']
         self.assertEqual(payload['series'][0]['metric'], 'name')
         self.assertEqual(payload['series'][0]['points'], [[1577874030, 'value']])
         self.assertEqual(payload['series'][0]['host'], 'unknown')
@@ -59,7 +59,7 @@ class SendMetricTests(TestCase):
         send_metric('name', 'value', MetricType.GAUGE)
 
         args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
+        payload = kwargs['json']
         self.assertEqual(payload['series'][0]['host'], 'test-repo')
 
     def test_metric_type_is_gauge_when_set(self, mock_post):
@@ -68,7 +68,7 @@ class SendMetricTests(TestCase):
         send_metric('name', 'value', MetricType.GAUGE)
 
         args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
+        payload = kwargs['json']
         self.assertEqual(payload['series'][0]['type'], MetricType.GAUGE)
 
     def test_metric_type_is_count_when_set(self, mock_post):
@@ -77,7 +77,7 @@ class SendMetricTests(TestCase):
         send_metric('name', 'value', MetricType.COUNT)
 
         args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
+        payload = kwargs['json']
         self.assertEqual(payload['series'][0]['type'], MetricType.COUNT)
 
     def test_metric_type_is_rate_when_set(self, mock_post):
@@ -86,7 +86,7 @@ class SendMetricTests(TestCase):
         send_metric('name', 'value', MetricType.RATE)
 
         args, kwargs = mock_post.call_args
-        payload = json.loads(kwargs['json'])
+        payload = kwargs['json']
         self.assertEqual(payload['series'][0]['type'], MetricType.RATE)
 
     def _setup_env(self, **kwargs):

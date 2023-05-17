@@ -1,4 +1,3 @@
-import json
 import os
 import time
 
@@ -64,7 +63,13 @@ def send_metric(name, value, metric_type, tags=None):
             'tags': [f'{key}:{value}' for key, value in tags.items()]
         }]
     }
-    requests.post(url, headers=headers, json=json.dumps(payload))
+    response = requests.post(url, headers=headers, json=payload)
+    if not response.ok:
+        print(
+            f"Post request to {url} failed with status code "
+            f"{response.status_code} and error {response.text}\n"
+            f"The payload sent was {payload}"
+        )
 
 
 def get_metric_name_for_package_manager(key):
