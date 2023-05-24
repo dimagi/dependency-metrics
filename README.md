@@ -32,6 +32,7 @@ Use the `--stats` option to generate a simple dictionary that displays the total
 
 ```commandline
 $ metrics pip --stats
+Total: 5
 Outdated: 2
 Multi-Major: 1
 Major: 0
