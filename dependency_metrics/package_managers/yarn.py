@@ -46,6 +46,13 @@ def get_yarn_packages():
     return outdated_packages
 
 
+def get_total_count_for_yarn():
+    """
+    Return total number of installed dependencies
+    """
+    return len(parse_yarn_list())
+
+
 def pull_latest_version(package_name):
     """
     Attempts to pull latest version of package from yarn

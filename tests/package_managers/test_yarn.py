@@ -6,8 +6,9 @@ from dependency_metrics.constants import UNKNOWN_VERSION
 from dependency_metrics.exceptions import Crash
 from dependency_metrics.package_managers.yarn import (
     get_yarn_packages,
+    get_total_count_for_yarn,
     parse_yarn_list,
-    pull_latest_version
+    pull_latest_version,
 )
 
 
@@ -92,3 +93,14 @@ class PullLatestVersionTests(TestCase):
         mock_latest_version.return_value = ''
         latest_version = pull_latest_version(mock.ANY)
         self.assertEqual(latest_version, UNKNOWN_VERSION)
+
+
+@patch('dependency_metrics.package_managers.yarn.parse_yarn_list')
+class GetTotalCountForYarnTests(TestCase):
+
+    def test_returns_accurate_count(self, mock_yarn_list):
+        mock_yarn_list.return_value = [
+            {"name": "test", "version": "1.0.0"},
+            {"name": "test2", "version": "5.1"}]
+        result = get_total_count_for_yarn()
+        self.assertEqual(result, 2)
