@@ -31,7 +31,7 @@ with a lower cased version of the name.
 """
 
 
-def get_yarn_packages():
+def get_outdated_yarn_packages():
     version = Yarn.version()
     if not version.startswith("1."):
         raise Crash(f"Yarn Classic (v1.x) is required, found {version}")
@@ -44,6 +44,13 @@ def get_yarn_packages():
             package["latest_version"] = latest_version
             outdated_packages.append(package)
     return outdated_packages
+
+
+def get_total_count_for_yarn():
+    """
+    Return total number of installed dependencies
+    """
+    return len(parse_yarn_list())
 
 
 def pull_latest_version(package_name):

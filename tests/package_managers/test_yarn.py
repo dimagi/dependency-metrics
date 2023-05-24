@@ -5,19 +5,20 @@ from unittest.mock import patch
 from dependency_metrics.constants import UNKNOWN_VERSION
 from dependency_metrics.exceptions import Crash
 from dependency_metrics.package_managers.yarn import (
-    get_yarn_packages,
+    get_outdated_yarn_packages,
+    get_total_count_for_yarn,
     parse_yarn_list,
-    pull_latest_version
+    pull_latest_version,
 )
 
 
-class GetYarnPackagesTests(TestCase):
+class GetOutdatedYarnPackagesTests(TestCase):
 
     @patch('dependency_metrics.package_managers.yarn.Yarn')
     def test_exception_raised_if_wrong_yarn_version(self, mock_yarn):
         mock_yarn.version.return_value = "2.0"
         with self.assertRaises(Crash):
-            get_yarn_packages()
+            get_outdated_yarn_packages()
 
     @patch('dependency_metrics.package_managers.yarn.parse_yarn_list')
     @patch('dependency_metrics.package_managers.yarn.pull_latest_version')
@@ -25,7 +26,7 @@ class GetYarnPackagesTests(TestCase):
         mock_latest_version.return_value = "5.0.0"
         mock_yarn_list.return_value = [{"name": "test", "version": "1.0.0"}]
 
-        packages = get_yarn_packages()
+        packages = get_outdated_yarn_packages()
 
         self.assertEqual(packages, [
             {"name": "test", "version": "1.0.0", "latest_version": "5.0.0"}])
@@ -36,7 +37,7 @@ class GetYarnPackagesTests(TestCase):
         mock_latest_version.return_value = UNKNOWN_VERSION
         mock_yarn_list.return_value = [{"name": "test", "version": "1.0.0"}]
 
-        packages = get_yarn_packages()
+        packages = get_outdated_yarn_packages()
 
         self.assertEqual(packages, [
             {"name": "test", "version": "1.0.0", "latest_version": "unknown"}])
@@ -92,3 +93,14 @@ class PullLatestVersionTests(TestCase):
         mock_latest_version.return_value = ''
         latest_version = pull_latest_version(mock.ANY)
         self.assertEqual(latest_version, UNKNOWN_VERSION)
+
+
+@patch('dependency_metrics.package_managers.yarn.parse_yarn_list')
+class GetTotalCountForYarnTests(TestCase):
+
+    def test_returns_accurate_count(self, mock_yarn_list):
+        mock_yarn_list.return_value = [
+            {"name": "test", "version": "1.0.0"},
+            {"name": "test2", "version": "5.1"}]
+        result = get_total_count_for_yarn()
+        self.assertEqual(result, 2)

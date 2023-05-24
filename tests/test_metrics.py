@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from dependency_metrics.metrics import build_packages_table, get_package_stats
+from dependency_metrics.metrics import (build_packages_table,
+                                        get_outdated_package_stats)
 
 
 class BuildPackagesTableTests(TestCase):
@@ -21,11 +22,11 @@ class BuildPackagesTableTests(TestCase):
         self.assertEqual(rows[1], "0.0.0    test                         1.0          1.0")
 
 
-class GetPackageStatsTests(TestCase):
+class GetOutdatedPackageStatsTests(TestCase):
 
     def test_outdated_multi_major_package(self):
         packages = [([2, 0, 0], 'test', '3.1', '1.0')]
-        stats = get_package_stats(packages)
+        stats = get_outdated_package_stats(packages)
         self.assertEqual(stats, {
             "Outdated": 1,
             "Multi-Major": 1,
@@ -37,7 +38,7 @@ class GetPackageStatsTests(TestCase):
 
     def test_outdated_major_package(self):
         packages = [([1, 0, 0], 'test', '2.5', '1.0')]
-        stats = get_package_stats(packages)
+        stats = get_outdated_package_stats(packages)
         self.assertEqual(stats, {
             "Outdated": 1,
             "Multi-Major": 0,
@@ -49,7 +50,7 @@ class GetPackageStatsTests(TestCase):
 
     def test_outdated_minor_package(self):
         packages = [([0, 5, 0], 'test', '2.5', '2.0')]
-        stats = get_package_stats(packages)
+        stats = get_outdated_package_stats(packages)
         self.assertEqual(stats, {
             "Outdated": 1,
             "Multi-Major": 0,
@@ -61,7 +62,7 @@ class GetPackageStatsTests(TestCase):
 
     def test_outdated_patch_package(self):
         packages = [([0, 0, 3], 'test', '2.5.4', '2.5.1')]
-        stats = get_package_stats(packages)
+        stats = get_outdated_package_stats(packages)
         self.assertEqual(stats, {
             "Outdated": 1,
             "Multi-Major": 0,
@@ -73,7 +74,7 @@ class GetPackageStatsTests(TestCase):
 
     def test_unknown_package(self):
         packages = [(None, 'test', 'unknown', '2.5.1')]
-        stats = get_package_stats(packages)
+        stats = get_outdated_package_stats(packages)
         self.assertEqual(stats, {
             "Outdated": 1,
             "Multi-Major": 0,
