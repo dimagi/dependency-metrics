@@ -2,7 +2,14 @@ import argparse
 
 from dependency_metrics.constants import PIP, YARN
 from dependency_metrics.datadog_utils import send_stats_to_datadog
-from dependency_metrics.package_managers.utils import iter_outdated_packages
+from dependency_metrics.package_managers.utils import (get_total_package_count,
+                                                       iter_outdated_packages)
+
+
+def print_packages_table(package_manager):
+    outdated_packages = iter_outdated_packages(package_manager)
+    for row in build_packages_table(outdated_packages):
+        print(row)
 
 
 def build_packages_table(packages):
@@ -29,6 +36,17 @@ def build_packages_table(packages):
         rows.append(build_row(behind, name, current, latest))
 
     return rows
+
+
+def get_package_stats(package_manager):
+    """
+    Adds a total count to the dictionary returned by get_outdated_package_stats
+    """
+    outdated_packages = iter_outdated_packages(package_manager)
+    outdated_stats = get_outdated_package_stats(outdated_packages)
+    total_stats = {"Total": get_total_package_count(package_manager)}
+    # overcomplicated to ensure the Total key is first in the dictionary
+    return {**total_stats, **outdated_stats}
 
 
 def get_outdated_package_stats(packages):
@@ -87,9 +105,8 @@ def main():
     )
     args = parser.parse_args()
 
-    outdated_packages = iter_outdated_packages(args.package_manager)
     if args.stats or args.send:
-        stats = get_outdated_package_stats(outdated_packages)
+        stats = get_package_stats(args.package_manager)
         if args.stats:
             # NOTE: subtle detail: we're depending on Python 3's ordered dict to
             # maintain deterministic ordering here
@@ -99,9 +116,7 @@ def main():
             send_stats_to_datadog(stats, args.package_manager)
 
     else:
-        package_table = build_packages_table(outdated_packages)
-        for row in package_table:
-            print(row)
+        print_packages_table(args.package_manager)
 
 
 if __name__ == "__main__":

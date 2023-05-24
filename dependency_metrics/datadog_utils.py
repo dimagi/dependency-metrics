@@ -82,6 +82,7 @@ def get_metric_name_for_package_manager(key):
 
 def get_metric_name_for_stats_key(key):
     metric_name_map = {
+        "Total": "total",
         "Outdated": "outdated",
         "Multi-Major": "multi_major_outdated",
         "Major": "major_outdated",
