@@ -3,7 +3,7 @@ import json
 import sh
 
 
-def get_pip_packages():
+def get_outdated_pip_packages():
     """
     Return relevant package version info from pip list output
     """

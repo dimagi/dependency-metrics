@@ -2,7 +2,7 @@ import argparse
 
 from dependency_metrics.constants import PIP, YARN
 from dependency_metrics.datadog_utils import send_stats_to_datadog
-from dependency_metrics.package_managers.utils import iter_packages
+from dependency_metrics.package_managers.utils import iter_outdated_packages
 
 
 def build_packages_table(packages):
@@ -31,7 +31,7 @@ def build_packages_table(packages):
     return rows
 
 
-def get_package_stats(packages):
+def get_outdated_package_stats(packages):
     """Displays a count for each version category of out of date dependencies"""
     stats = {
         "Outdated": 0,
@@ -87,9 +87,9 @@ def main():
     )
     args = parser.parse_args()
 
-    packages = iter_packages(args.package_manager)
+    outdated_packages = iter_outdated_packages(args.package_manager)
     if args.stats or args.send:
-        stats = get_package_stats(packages)
+        stats = get_outdated_package_stats(outdated_packages)
         if args.stats:
             # NOTE: subtle detail: we're depending on Python 3's ordered dict to
             # maintain deterministic ordering here
@@ -99,7 +99,7 @@ def main():
             send_stats_to_datadog(stats, args.package_manager)
 
     else:
-        package_table = build_packages_table(packages)
+        package_table = build_packages_table(outdated_packages)
         for row in package_table:
             print(row)
 

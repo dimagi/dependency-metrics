@@ -31,7 +31,7 @@ with a lower cased version of the name.
 """
 
 
-def get_yarn_packages():
+def get_outdated_yarn_packages():
     version = Yarn.version()
     if not version.startswith("1."):
         raise Crash(f"Yarn Classic (v1.x) is required, found {version}")
