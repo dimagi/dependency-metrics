@@ -59,7 +59,7 @@ def get_outdated_package_stats(packages):
         "Patch": 0,
         "Unknown": 0,
     }
-    for delta, name, current, latest in packages:
+    for delta, name, _, _ in packages:
         if delta and any(delta):
             major, minor, patch = delta
             if major:
