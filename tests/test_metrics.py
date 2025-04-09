@@ -83,3 +83,16 @@ class GetOutdatedPackageStatsTests(TestCase):
             "Patch": 0,
             "Unknown": 1,
         })
+
+    def test_outdated_mixed_version(self):
+        # the behind function parses these two versions identically
+        packages = [([0, 0, 0], 'test', '3.0.0', '3.0.0-alpha')]
+        stats = get_outdated_package_stats(packages)
+        self.assertEqual(stats, {
+            "Outdated": 1,
+            "Multi-Major": 0,
+            "Major": 0,
+            "Minor": 0,
+            "Patch": 0,
+            "Unknown": 1,
+        })
