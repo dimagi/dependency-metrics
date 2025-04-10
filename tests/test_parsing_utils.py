@@ -48,6 +48,10 @@ class BehindTests(TestCase):
         delta = behind("unknown", "1.0.0")
         self.assertEqual(delta, None)
 
+    def test_mixed_version_delta(self):
+        delta = behind("1.0.0", "1.0.0-alpha")
+        self.assertEqual(delta, [0, 0, 0])
+
 
 class ParseVersionTests(TestCase):
 
