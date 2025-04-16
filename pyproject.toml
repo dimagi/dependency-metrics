@@ -4,9 +4,9 @@ requires = ["setuptools"]
 
 [project]
 name = "dependency-metrics"
-version = "0.1.2"
 readme = "README.md"
 description = "Python tool to track outdated dependencies."
+dynamic = ["version"]
 authors = [
     {name = "Dimagi", email = "dev@dimagi.com"},
 ]
@@ -37,3 +37,6 @@ test = [
 
 [project.urls]
 repository = "https://github.com/dimagi/dependency-metrics"
+
+[tool.setuptools.dynamic]
+version = {attr = "dependency_metrics.__version__"}
