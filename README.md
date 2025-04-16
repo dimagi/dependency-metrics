@@ -78,7 +78,7 @@ nose2 dot.path.to.file.class.or.test  # runs specific test
 
 To publish a new release on [pypi.org](https://pypi.org/p/dependency-metrics/):
 
-- Update `__version__` in [dependency-metrics/_\_init__.py](dependency-metrics/__init__.py).
+- Update `__version__` in [dependency_metrics/__init__.py](dependency_metrics/__init__.py).
 - Create and push a git tag with the new version number.
   ```sh
   git tag vX.Y.Z

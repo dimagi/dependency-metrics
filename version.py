@@ -9,7 +9,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-PACKAGE_NAME = "dependency-metrics"
+PACKAGE_NAME = "dependency_metrics"
 PACKAGE_PATH = Path(__file__).parent / PACKAGE_NAME / "__init__.py"
 V_EXPR = re.compile(r"""(?<=^__version__ = )['"](.+)['"]$""", flags=re.M)
 
