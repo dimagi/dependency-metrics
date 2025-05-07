@@ -33,4 +33,10 @@ class Pip:
         args = ["list", "--format", "json"]
         if outdated:
             args.append("--outdated")
+
+        try:
+            return sh.uv("pip", *args)
+        except sh.CommandNotFound:
+            pass  # fall back to pip
+
         return sh.pip(*args)
