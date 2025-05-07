@@ -1,4 +1,7 @@
 import json
+import os
+import sys
+from pathlib import Path
 
 import sh
 
@@ -30,7 +33,29 @@ class Pip:
         """
         Equivalent to ``pip list --format json [--outdated]``
         """
+        venv = os.environ.get("VIRTUAL_ENV")
+        if not venv:
+            print("WARNING: VIRTUAL_ENV is not set.", file=sys.stderr)
+        else:
+            venv = Path(venv)
+
         args = ["list", "--format", "json"]
         if outdated:
             args.append("--outdated")
-        return sh.pip(*args)
+
+        try:
+            return sh.uv("pip", *args)
+        except sh.CommandNotFound:
+            pass  # fall back to pip
+
+        if not venv:
+            pip = sh.pip
+        elif (venv / "bin/pip").exists():
+            pip = sh.Command(venv / "bin/pip")
+        else:
+            # pip may exist outside the active virtualenv, and may list
+            # packages from somewhere else on the system.
+            print("WARNING: pip not found in virtualenv. "
+                  f"Using --python={venv}", file=sys.stderr)
+            pip = sh.pip.bake(python=venv)
+        return pip(*args)
