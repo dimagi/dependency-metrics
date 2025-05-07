@@ -4,7 +4,7 @@
 A command line tool to analyze and monitor how up-to-date dependencies of a project are. For more detail, see the [Usage](#usage) section below.
 
 #### Supported Package Managers
-- pip
+- pip or uv
 - yarn
 
 #### Supported Application Monitoring Platforms
