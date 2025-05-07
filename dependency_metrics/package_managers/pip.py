@@ -1,4 +1,6 @@
 import json
+import os
+import sys
 
 import sh
 
@@ -30,6 +32,10 @@ class Pip:
         """
         Equivalent to ``pip list --format json [--outdated]``
         """
+        venv = os.environ.get("VIRTUAL_ENV")
+        if not venv:
+            print("WARNING: VIRTUAL_ENV is not set.", file=sys.stderr)
+
         args = ["list", "--format", "json"]
         if outdated:
             args.append("--outdated")
